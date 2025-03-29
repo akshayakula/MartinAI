@@ -1,4 +1,4 @@
-const vfinderService = require('./vfinder');
+const datalasticService = require('./datalastic');
 const anomalyService = require('./anomaly');
 const Geofence = require('../models/Geofence');
 
@@ -38,7 +38,7 @@ function stopPolling() {
 }
 
 /**
- * Poll vessel data from VesselFinder API
+ * Poll vessel data from Datalastic API
  */
 async function pollData() {
   try {
@@ -58,11 +58,11 @@ async function pollData() {
         // Calculate bounding box from geofence
         const bbox = calculateBoundingBox(geofence.geoJson);
         
-        // Fetch vessel data from API
-        const apiVessels = await vfinderService.getVessels(bbox);
+        // Fetch vessel data from Datalastic API
+        const apiVessels = await datalasticService.getVessels(bbox);
         
         // Store vessel data
-        const vessels = await vfinderService.storeVesselData(apiVessels);
+        const vessels = await datalasticService.storeVesselData(apiVessels);
         
         // Process vessel data for anomalies
         const anomalies = await anomalyService.processVesselData(vessels);

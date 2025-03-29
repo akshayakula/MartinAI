@@ -1,0 +1,212 @@
+@keyframes scan {
+  0% {
+    left: 0;
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    left: 100%;
+    opacity: 0.7;
+  }
+}
+
+.animate-scan {
+  animation: scan 4s ease-in-out infinite;
+}
+
+/* Defense grid background */
+.defense-grid-bg {
+  background-image: 
+    linear-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14, 165, 233, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: center center;
+}
+
+/* Glowing effect */
+.defense-glow {
+  box-shadow: 0 0 15px rgba(20, 184, 166, 0.3), 
+              0 0 30px rgba(14, 165, 233, 0.2);
+}
+
+/* Radar sweep animation */
+.radar-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.radar-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #0D1117;
+  color: #E6E6E6;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* High-tech scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #171C26;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3C3C4E;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00E0D5;
+}
+
+/* Custom animation for blinking cursor */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Animated background gradient */
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-animate {
+  background: linear-gradient(-45deg, #0D1117, #171C26, #1A2536, #0E1A2B);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+/* Radar sweep effect */
+.radar-sweep::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(from 0deg, transparent, rgba(0, 224, 213, 0.2), transparent);
+  animation: radar-sweep 4s linear infinite;
+  border-radius: inherit;
+}
+
+/* Data flow animation */
+.data-flow {
+  position: relative;
+  overflow: hidden;
+}
+
+.data-flow::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 200%;
+  top: -50%;
+  left: 0;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    rgba(0, 224, 213, 0.05) 25%, 
+    rgba(0, 224, 213, 0.1) 50%, 
+    rgba(0, 224, 213, 0.05) 75%, 
+    transparent 100%);
+  animation: data-stream 8s linear infinite;
+}
+
+/* Terminal text effect */
+.terminal-text {
+  overflow: hidden;
+  border-right: 0.15em solid #00E0D5;
+  white-space: nowrap;
+  margin: 0 auto;
+  letter-spacing: 0.05em;
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #00E0D5 }
+}
+
+/* Add custom classes */
+@layer components {
+  .tech-card {
+    @apply bg-background-light border border-border rounded-md relative overflow-hidden shadow-md;
+  }
+  
+  .tech-border {
+    @apply border border-border;
+  }
+  
+  .highlight-glow {
+    @apply shadow-highlight transition-shadow duration-300;
+  }
+  
+  .highlight-glow:hover {
+    @apply shadow-[0_0_20px_rgba(0,224,213,0.5)];
+  }
+  
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block mr-2;
+  }
+  
+  .tech-button {
+    @apply px-4 py-2 rounded-md font-medium transition-all duration-200 flex items-center justify-center focus:outline-none;
+  }
+  
+  .tech-button-primary {
+    @apply tech-button bg-highlight text-background hover:bg-opacity-80;
+  }
+  
+  .tech-button-optimizer {
+    @apply tech-button bg-button-optimizer text-background hover:bg-opacity-80;
+  }
+  
+  .tech-button-predictive {
+    @apply tech-button bg-button-predictive text-background hover:bg-opacity-80;
+  }
+  
+  .tech-button-rules {
+    @apply tech-button bg-button-rules text-background hover:bg-opacity-80;
+  }
+} 

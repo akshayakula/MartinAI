@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Anomaly = require('../models/Anomaly');
 const anomalyService = require('../services/anomaly');
-const twilioService = require('../services/twilio');
 
 /**
  * GET /api/anomalies
@@ -125,32 +124,6 @@ router.put('/:id', async (req, res) => {
   } catch (error) {
     console.error('Error updating anomaly:', error);
     res.status(500).json({ message: 'Error updating anomaly', error: error.message });
-  }
-});
-
-/**
- * POST /api/anomalies/:id/alert
- * Send an SMS alert for an anomaly
- */
-router.post('/:id/alert', async (req, res) => {
-  try {
-    const { phoneNumber } = req.body;
-    
-    if (!phoneNumber) {
-      return res.status(400).json({ message: 'Phone number is required' });
-    }
-    
-    const anomaly = await Anomaly.findById(req.params.id);
-    
-    if (!anomaly) {
-      return res.status(404).json({ message: 'Anomaly not found' });
-    }
-    
-    const result = await twilioService.sendAnomalyAlert(anomaly, phoneNumber);
-    res.json({ message: 'Alert sent successfully', result });
-  } catch (error) {
-    console.error('Error sending alert:', error);
-    res.status(500).json({ message: 'Error sending alert', error: error.message });
   }
 });
 

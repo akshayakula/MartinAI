@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Vessel = require('../models/Vessel');
-const vfinderService = require('../services/vfinder');
+const datalasticService = require('../services/datalastic');
 
 /**
  * GET /api/vessels
@@ -62,11 +62,11 @@ router.get('/bbox/:bbox', async (req, res) => {
       return res.status(400).json({ message: 'Invalid bounding box format' });
     }
     
-    // Fetch from VesselFinder API
-    const apiVessels = await vfinderService.getVessels(bbox);
+    // Fetch from Datalastic API
+    const apiVessels = await datalasticService.getVessels(bbox);
     
     // Store vessel data
-    const vessels = await vfinderService.storeVesselData(apiVessels);
+    const vessels = await datalasticService.storeVesselData(apiVessels);
     
     res.json(vessels);
   } catch (error) {

@@ -1,10 +1,9 @@
-const { ChatOpenAI } = require('langchain/chat_models/openai');
+const { ChatOpenAI } = require('@langchain/openai');
 const { PromptTemplate } = require('langchain/prompts');
 const { StructuredOutputParser } = require('langchain/output_parsers');
 const Vessel = require('../models/Vessel');
 const Anomaly = require('../models/Anomaly');
 const Geofence = require('../models/Geofence');
-const twilioService = require('../services/twilio');
 
 // Initialize the model
 const model = new ChatOpenAI({
@@ -22,12 +21,10 @@ Always respond with clear, concise information in a professional tone.
 You have access to the following features:
 1. View vessel information
 2. List recent anomalies
-3. Send alerts to specified numbers
-4. Query vessels in specific regions
-5. Check if vessels have gone dark (AIS shutoff)
+3. Query vessels in specific regions
+4. Check if vessels have gone dark (AIS shutoff)
 
 When responding to queries about vessels or anomalies, format data in a clear, structured way.
-If asked to take an action like sending an alert, confirm this action.
 `;
 
 /**
@@ -54,17 +51,9 @@ async function executeQuery(query) {
     // Get response from model
     const response = await model.call(formattedPrompt);
 
-    // Extract actions from response
-    const actions = extractActions(response.content);
-
-    // Execute actions if needed
-    if (actions.length > 0) {
-      await executeActions(actions);
-    }
-
     return {
       response: response.content,
-      actions,
+      actions: [], // No actions since we removed Twilio
     };
   } catch (error) {
     console.error('Error in AI agent:', error);
@@ -130,61 +119,6 @@ async function generateContext(query) {
   }
 
   return context;
-}
-
-/**
- * Extract actions from AI response
- * @param {string} response - AI response text
- * @returns {Array} - Array of actions
- */
-function extractActions(response) {
-  const actions = [];
-  
-  // Check for alert action
-  if (response.includes("[SEND_ALERT]")) {
-    const alertMatch = response.match(/\[SEND_ALERT\]\s*Phone: ([^\s]+)\s*Message: (.+?)(\[|$)/s);
-    if (alertMatch) {
-      actions.push({
-        type: 'SEND_ALERT',
-        phone: alertMatch[1],
-        message: alertMatch[2].trim(),
-      });
-    }
-  }
-  
-  // Add other action types as needed
-
-  return actions;
-}
-
-/**
- * Execute actions returned by the AI
- * @param {Array} actions - Array of actions to execute
- * @returns {Promise<Array>} - Array of results
- */
-async function executeActions(actions) {
-  const results = [];
-
-  for (const action of actions) {
-    if (action.type === 'SEND_ALERT' && action.phone && action.message) {
-      try {
-        const result = await twilioService.sendSms(action.phone, action.message);
-        results.push({
-          action: 'SEND_ALERT',
-          success: true,
-          messageSid: result.sid,
-        });
-      } catch (error) {
-        results.push({
-          action: 'SEND_ALERT',
-          success: false,
-          error: error.message,
-        });
-      }
-    }
-  }
-
-  return results;
 }
 
 module.exports = {
